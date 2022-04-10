@@ -1,12 +1,14 @@
-import { readonly } from "../reative";
+import { isReadonly, readonly } from "../reative";
 
 
 describe("readonly", ()=>{
   
-  it("happy path", () => {
+  it("should make nested values Readonly", () => {
     const original = { foo: 1, bar: { baz: 2 } };
     const wrapped = readonly(original);
     expect(wrapped).not.toBe(original)
+    expect(isReadonly(wrapped)).toBe(true)
+    expect(isReadonly(original)).toBe(false)
     expect(wrapped.foo).toBe(1)
   });
 
