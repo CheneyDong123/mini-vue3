@@ -1,5 +1,7 @@
 import { extend } from "../shared"
 
+let activeEffect
+let shouldTrack
 class ReactiveEffect {
   private _fn : any
   active = true
@@ -12,8 +14,17 @@ class ReactiveEffect {
   }
 
   run() {
+    if(!this.active) {
+      return this._fn()
+    }
+    // 应该收集
+    shouldTrack = true
     activeEffect = this
-    return this._fn()
+
+    let result = this._fn()
+
+    shouldTrack = false
+    return result
   }
 
   stop() {
@@ -31,11 +42,14 @@ function clearupEffect(effect) {
   effect.deps.forEach((dep: any) => {
     dep.delete(effect)
   });
+  effect.deps.length = 0
 }
 
 // target -> key -> dep(fn)
 const targetsMap = new Map()
 export function track(target,key) {
+
+  if(!isTracking()) return
 
   let depsMap = targetsMap.get(target)
   if(!depsMap){
@@ -48,11 +62,15 @@ export function track(target,key) {
     dep = new Set()
     depsMap.set(key,dep)
   }
+  
+  if(dep.has(activeEffect)) return
 
-
-  if(!activeEffect) return
   dep.add(activeEffect)
   activeEffect.deps.push(dep)
+}
+
+function isTracking() {
+  return shouldTrack && activeEffect != undefined
 }
 
 export function trigger(target,key) {
@@ -68,8 +86,6 @@ export function trigger(target,key) {
   }
 }
 
-
-let activeEffect
 
 export function effect(fn, options: any = {}) {
 
