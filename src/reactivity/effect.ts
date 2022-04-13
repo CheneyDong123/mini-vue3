@@ -3,7 +3,7 @@ import { extend } from "../shared"
 let activeEffect
 let shouldTrack
 class ReactiveEffect {
-  private _fn : any
+  private _fn: any
   active = true
   deps = []
   onStop?: () => void
@@ -14,7 +14,7 @@ class ReactiveEffect {
   }
 
   run() {
-    if(!this.active) {
+    if (!this.active) {
       return this._fn()
     }
     // 应该收集
@@ -28,9 +28,9 @@ class ReactiveEffect {
   }
 
   stop() {
-    if(this.active){
+    if (this.active) {
       clearupEffect(this)
-      if(this.onStop) {
+      if (this.onStop) {
         this.onStop()
       }
       this.active = false
@@ -47,38 +47,45 @@ function clearupEffect(effect) {
 
 // target -> key -> dep(fn)
 const targetsMap = new Map()
-export function track(target,key) {
+export function track(target, key) {
 
-  if(!isTracking()) return
+  if (!isTracking()) return
 
   let depsMap = targetsMap.get(target)
-  if(!depsMap){
+  if (!depsMap) {
     depsMap = new Map()
-    targetsMap.set(target,depsMap)
+    targetsMap.set(target, depsMap)
   }
 
   let dep = depsMap.get(key)
-  if(!dep){
+  if (!dep) {
     dep = new Set()
-    depsMap.set(key,dep)
+    depsMap.set(key, dep)
   }
-  
-  if(dep.has(activeEffect)) return
 
+  trackEffects(dep)
+}
+
+export function trackEffects(dep) {
+  if (dep.has(activeEffect)) return
   dep.add(activeEffect)
   activeEffect.deps.push(dep)
 }
 
-function isTracking() {
+export function isTracking() {
   return shouldTrack && activeEffect != undefined
 }
 
-export function trigger(target,key) {
+export function trigger(target, key) {
   let depsMap = targetsMap.get(target)
   let dep = depsMap.get(key)
 
+  triggerEffects(dep)
+}
+
+export function triggerEffects(dep) {
   for (let effect of dep) {
-    if(effect.scheduler){
+    if (effect.scheduler) {
       effect.scheduler()
     } else {
       effect.run()
@@ -102,5 +109,5 @@ export function effect(fn, options: any = {}) {
 }
 
 export function stop(runner) {
-   runner.effect.stop()
+  runner.effect.stop()
 }
