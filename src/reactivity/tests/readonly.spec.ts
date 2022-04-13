@@ -1,4 +1,4 @@
-import { isReadonly, readonly } from "../reative";
+import { isProxy, isReadonly, readonly } from "../reative";
 
 
 describe("readonly", ()=>{
@@ -11,6 +11,7 @@ describe("readonly", ()=>{
     expect(isReadonly(original)).toBe(false)
     expect(isReadonly(wrapped.bar)).toBe(true)
     expect(isReadonly(original.bar)).toBe(false)
+    expect(isProxy(wrapped)).toBe(true)
     expect(wrapped.foo).toBe(1)
   });
 
