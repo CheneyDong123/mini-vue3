@@ -8,23 +8,26 @@ export function render(vnode, container) {
 
 function patch(vnode, container) {
   // 处理组件
+  // TODO 判断 vnode 是不是一个 element
+  // 是 element 那么就应该处理 element
+  // processElement()
   processComponent(vnode, container)
 }
 
 function processComponent(vnode: any, container: any) {
-  mountComponent(vnode, container)
+  mountComponent(vnode,container)
 }
 
 
-function mountComponent(vnode: any, container) {
+function mountComponent(vnode: any,container) {
   const instance = createComponentInstance(vnode)
 
   setupComponent(instance)
 
-  setupRenderEffect(instance, container)
+  setupRenderEffect(instance,container)
 }
 
-function setupRenderEffect(instance: any, container) {
+function setupRenderEffect(instance: any,container) {
   const subTree = instance.render()
 
   // subTree : vnode
