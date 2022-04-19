@@ -8,7 +8,7 @@ export function render(vnode, container) {
 }
 
 function patch(vnode, container) {
-  debugger
+  // debugger
   // 处理组件
   // TODO 判断 vnode 是不是一个 element
   // 是 element 那么就应该处理 element
@@ -28,7 +28,7 @@ function processElement(vnode: any, container: any) {
 
 function mountElement(vnode: any, container: any) {
   const { type, props, children } = vnode
-  const el = document.createElement(type)
+  const el = (vnode.el = document.createElement(type))
 
   if (typeof children === "string") {
     el.textContent = children
@@ -54,19 +54,23 @@ function processComponent(vnode: any, container: any) {
   mountComponent(vnode, container)
 }
 
-
 function mountComponent(vnode: any, container) {
   const instance = createComponentInstance(vnode)
 
   setupComponent(instance)
 
-  setupRenderEffect(instance, container)
+  setupRenderEffect(instance, vnode, container)
 }
 
-function setupRenderEffect(instance: any, container) {
-  const subTree = instance.render()
+function setupRenderEffect(instance: any, vnode, container) {
+  // debugger
+  const { proxy } = instance
+
+  const subTree = instance.render.call(proxy)
 
   // subTree : vnode
   patch(subTree, container)
+
+  vnode.el = subTree.el
 }
 
