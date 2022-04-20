@@ -1,4 +1,5 @@
 import { isObject } from "../shared/index"
+import { ShapeFlags } from "../shared/ShapeFlags"
 import { createComponentInstance, setupComponent } from "./component"
 
 export function render(vnode, container) {
@@ -14,9 +15,9 @@ function patch(vnode, container) {
   // 是 element 那么就应该处理 element
   // console.log(vnode)
   // console.log(container)
-  if (typeof vnode.type === "string") {
+  if (vnode.shapeFlags & ShapeFlags.ELEMENT) {
     processElement(vnode, container)
-  } else if (isObject(vnode.type)) {
+  } else if (vnode.shapeFlags & ShapeFlags.STATEFUL_COMPONENT) {
     processComponent(vnode, container)
   }
 
@@ -27,12 +28,12 @@ function processElement(vnode: any, container: any) {
 }
 
 function mountElement(vnode: any, container: any) {
-  const { type, props, children } = vnode
+  const { type, props, children, shapeFlags } = vnode
   const el = (vnode.el = document.createElement(type))
 
-  if (typeof children === "string") {
+  if (shapeFlags & ShapeFlags.TEXT_CHILDREN) {
     el.textContent = children
-  } else if (Array.isArray(children)) {
+  } else if (shapeFlags & ShapeFlags.ARRAY_CHILDREN) {
     mountChildren(vnode, el)
   }
 
@@ -54,15 +55,15 @@ function processComponent(vnode: any, container: any) {
   mountComponent(vnode, container)
 }
 
-function mountComponent(vnode: any, container) {
-  const instance = createComponentInstance(vnode)
+function mountComponent(initialVnode: any, container) {
+  const instance = createComponentInstance(initialVnode)
 
   setupComponent(instance)
 
-  setupRenderEffect(instance, vnode, container)
+  setupRenderEffect(instance, initialVnode, container)
 }
 
-function setupRenderEffect(instance: any, vnode, container) {
+function setupRenderEffect(instance: any, initialVnode, container) {
   // debugger
   const { proxy } = instance
 
@@ -71,6 +72,6 @@ function setupRenderEffect(instance: any, vnode, container) {
   // subTree : vnode
   patch(subTree, container)
 
-  vnode.el = subTree.el
+  initialVnode.el = subTree.el
 }
 

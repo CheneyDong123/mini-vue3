@@ -9,8 +9,9 @@ export const App = {
     return h(
       "div",
       { id: "root" },
-      // [h("p", { class: "red" }, "hi"), h("p", { class: "blue" }, "mini-vue")]
-      "hello " + this.msg
+      
+      [h("p", { class: "red" }, "hi"), h("p", { class: "blue" }, this.msg)]
+      // "hello " + this.msg
     )
   },
   setup() {
