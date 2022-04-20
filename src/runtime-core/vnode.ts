@@ -8,7 +8,7 @@ export function createVNode(type, props?, children?) {
     props,
     children,
     shapeFlags: getShapeFlags(type),
-    el: null
+    el: null,
   }
 
   if (typeof children === "string") {
@@ -16,7 +16,7 @@ export function createVNode(type, props?, children?) {
   } else if (Array.isArray(children)) {
     vnode.shapeFlags |= ShapeFlags.ARRAY_CHILDREN
   }
-  
+
   return vnode
 }
 
