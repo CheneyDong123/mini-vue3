@@ -8,8 +8,16 @@ export const App = {
     window.self = this
     return h(
       "div",
-      { id: "root" },
-      
+      {
+        id: "root",
+        onClick() {
+          console.log("click")
+        },
+        onMousedown() {
+          console.log("mousedown")
+        }
+      },
+
       [h("p", { class: "red" }, "hi"), h("p", { class: "blue" }, this.msg)]
       // "hello " + this.msg
     )
