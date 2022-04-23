@@ -1,8 +1,8 @@
-import { shallowReadonly } from "../reactivity/reative"
-import { emit } from "./componentEmit"
-import { initProps } from "./componentProps"
-import { PublicInstanceProxyHandlers } from "./componentPublicInstance"
-import { initSlots } from "./componentSlots"
+import { shallowReadonly } from "../reactivity/reative";
+import { emit } from "./componentEmit";
+import { initProps } from "./componentProps";
+import { PublicInstanceProxyHandlers } from "./componentPublicInstance";
+import { initSlots } from "./componentSlots";
 
 export function createComponentInstance(vnode) {
   const component = {
@@ -11,54 +11,66 @@ export function createComponentInstance(vnode) {
     setupState: {},
     props: {},
     slots: {},
-    emit: () => { }
-  }
+    emit: () => {},
+  };
 
-  component.emit = emit.bind(null, component) as any
+  component.emit = emit.bind(null, component) as any;
 
-  return component
+  return component;
 }
 
 export function setupComponent(instance) {
   // TODO
-  initProps(instance, instance.vnode.props)
-  initSlots(instance, instance.vnode.children)
+  initProps(instance, instance.vnode.props);
+  initSlots(instance, instance.vnode.children);
 
-  setupStatefulComponent(instance)
+  setupStatefulComponent(instance);
 }
 
 function setupStatefulComponent(instance: any) {
   // debugger
-  const Component = instance.type
+  const Component = instance.type;
 
-  instance.proxy = new Proxy({ _: instance }, PublicInstanceProxyHandlers)
+  instance.proxy = new Proxy({ _: instance }, PublicInstanceProxyHandlers);
 
-  const { setup } = Component
+  const { setup } = Component;
 
   if (setup) {
+    setCurrentInstance(instance);
     // function / Object
     const setupResult = setup(shallowReadonly(instance.props), {
-      emit: instance.emit
-    })
+      emit: instance.emit,
+    });
 
-    handleSetupResult(instance, setupResult)
+    setCurrentInstance(null);
+
+    handleSetupResult(instance, setupResult);
   }
 }
 
 function handleSetupResult(instance, setupResult: any) {
   //  TODO function
   if (typeof setupResult === "object") {
-    instance.setupState = setupResult
+    instance.setupState = setupResult;
   }
 
-  finishCompomentSetup(instance)
+  finishCompomentSetup(instance);
 }
 
 function finishCompomentSetup(instance: any) {
-  const Component = instance.type
+  const Component = instance.type;
 
   // if (Component.render) {
-  instance.render = Component.render
+  instance.render = Component.render;
   // }
 }
 
+let currentInstace = null;
+
+export function getCurrentInstance() {
+  return currentInstace;
+}
+
+function setCurrentInstance(instance: any) {
+  currentInstace = instance;
+}
