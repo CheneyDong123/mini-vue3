@@ -1,5 +1,6 @@
 import { ShapeFlags } from "../shared/ShapeFlags";
 import { createComponentInstance, setupComponent } from "./component";
+import { Fragment, Text } from "./vnode";
 
 export function render(vnode, container) {
   // 调用patch
@@ -14,11 +15,35 @@ function patch(vnode, container) {
   // 是 element 那么就应该处理 element
   // console.log(vnode)
   // console.log(container)
-  if (vnode.shapeFlags & ShapeFlags.ELEMENT) {
-    processElement(vnode, container);
-  } else if (vnode.shapeFlags & ShapeFlags.STATEFUL_COMPONENT) {
-    processComponent(vnode, container);
+  const { type } = vnode;
+  switch (type) {
+    case Fragment:
+      processFragment(vnode, container);
+      break;
+
+    case Text:
+      processText(vnode, container);
+      break;
+
+    default:
+      if (vnode.shapeFlags & ShapeFlags.ELEMENT) {
+        processElement(vnode, container);
+      } else if (vnode.shapeFlags & ShapeFlags.STATEFUL_COMPONENT) {
+        processComponent(vnode, container);
+      }
+      break;
   }
+}
+
+function processText(vnode: any, container: any) {
+  const { children } = vnode;
+  const textNode = (vnode.el = document.createTextNode(children));
+
+  container.append(textNode);
+}
+
+function processFragment(vnode: any, container: any) {
+  mountChildren(vnode, container);
 }
 
 function processElement(vnode: any, container: any) {
