@@ -18,10 +18,10 @@ function patchProp(el, key, val) {
   }
 }
 
-function insert(el, container) {
+function insert(el, parent) {
   console.log("insert------");
 
-  container.append(el);
+  parent.append(el);
 }
 
 const renderer: any = createRenderer({ createElement, patchProp, insert });
