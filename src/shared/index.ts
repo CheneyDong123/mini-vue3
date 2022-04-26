@@ -1,25 +1,31 @@
-export const extend = Object.assign
+export const extend = Object.assign;
+
+export const EMPTY_OBJECT = {};
 
 export const isObject = (value) => {
-  return value !== null && typeof value === "object"
-}
+  return value !== null && typeof value === "object";
+};
 
 export const hasChanged = (val, newValue) => {
-  return !Object.is(val, newValue)
-}
+  return !Object.is(val, newValue);
+};
 
-export const hasOwn = (val, key) => Object.prototype.hasOwnProperty.call(val, key)
+export const hasOwn = (val, key) =>
+  Object.prototype.hasOwnProperty.call(val, key);
 
 export const camelize = (str: string) => {
-  return str && str.replace(/-(\w)/, (_, c: string) => {
-    return c ? c.toUpperCase() : ""
-  })
-}
+  return (
+    str &&
+    str.replace(/-(\w)/, (_, c: string) => {
+      return c ? c.toUpperCase() : "";
+    })
+  );
+};
 
 const capitalize = (str: string) => {
-  return str.charAt(0).toUpperCase() + str.slice(1)
-}
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
 
 export const toHandlerKey = (str: string) => {
-  return str ? "on" + capitalize(str) : ""
-}
+  return str ? "on" + capitalize(str) : "";
+};
