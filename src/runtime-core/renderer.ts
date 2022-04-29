@@ -184,17 +184,18 @@ export function createRenderer(options) {
         const nextChild = c2[i];
         keyToNewIndexMap.set(nextChild.key, i);
       }
-      let newIndex;
       for (let i = s1; i <= e1; i++) {
         const prevChild = c1[i];
         if (patched >= toBePatched) {
           hostRemove(prevChild.el);
           continue;
         }
+
+        let newIndex;
         if (prevChild.key != null) {
           newIndex = keyToNewIndexMap.get(prevChild.key);
         } else {
-          for (let j = s2; j < s2; j++) {
+          for (let j = s2; j <= e2; j++) {
             if (isSameVNodeType(prevChild, c2[j])) {
               newIndex = j;
               break;
