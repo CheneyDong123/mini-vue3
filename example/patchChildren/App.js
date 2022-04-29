@@ -13,8 +13,8 @@ export const App = {
       h("p", {}, "主页"),
       // h(ArrayToText),
       // h(TextToText),
-      h(TextToArray),
-      // h(ArrayToArray),
+      // h(TextToArray),
+      h(ArrayToArray),
     ]);
   },
 };
