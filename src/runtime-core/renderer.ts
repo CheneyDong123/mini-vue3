@@ -386,7 +386,7 @@ export function createRenderer(options) {
       {
         scheduler() {
           console.log("scheler");
-          queueJobs()
+          queueJobs(instance.updater);
         },
       }
     );
