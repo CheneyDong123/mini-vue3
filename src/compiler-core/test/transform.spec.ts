@@ -5,6 +5,7 @@ import { NodeTypes } from "../src/ast";
 describe("transform", () => {
   it("happy path", () => {
     const ast = baseParse("<div>hi,{{message}}</div>");
+    console.log("11111", ast);
 
     const plugin = (node) => {
       if (node.type == NodeTypes.TEXT) {
