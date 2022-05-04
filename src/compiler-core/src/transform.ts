@@ -16,7 +16,7 @@ function traverseNode(node: any, context) {
 
   for (let i = 0; i < nodeTransforms.length; i++) {
     const tansform = nodeTransforms[i];
-    tansform(node);
+    tansform(node, context);
   }
 
   switch (node.type) {
@@ -56,5 +56,10 @@ function createTranformContext(root: any, options: any) {
   return context;
 }
 function createRootCodegen(root: any) {
-  root.codegenNode = root.children[0];
+  const child = root.children[0];
+  if (child.type == NodeTypes.ELEMENT) {
+    root.codegenNode = child.codegenNode;
+  } else {
+    root.codegenNode = root.children[0];
+  }
 }
