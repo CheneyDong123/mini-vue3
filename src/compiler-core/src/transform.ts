@@ -13,15 +13,18 @@ export function transform(root, options = {}) {
 
 function traverseNode(node: any, context) {
   const nodeTransforms = context.nodeTransforms;
-
+  const exitFns: any = [];
   for (let i = 0; i < nodeTransforms.length; i++) {
     const tansform = nodeTransforms[i];
-    tansform(node, context);
+    const onExit = tansform(node, context);
+    if (onExit) {
+      exitFns.push(onExit);
+    }
   }
 
   switch (node.type) {
     case NodeTypes.INTERPOLATION:
-      context.helper(helperMapName[TO_DISPLAY_STRING]);
+      context.helper(TO_DISPLAY_STRING);
       break;
 
     case NodeTypes.ROOT:
@@ -31,6 +34,11 @@ function traverseNode(node: any, context) {
 
     default:
       break;
+  }
+
+  let i = exitFns.length;
+  while (i--) {
+    exitFns[i]();
   }
 }
 
@@ -49,7 +57,7 @@ function createTranformContext(root: any, options: any) {
     nodeTransforms: options.nodeTransforms || [],
     helpers: new Map(),
     helper(key) {
-      context.helpers.set(key, 1);
+      context.helpers.set(helperMapName[key], 1);
     },
   };
 
