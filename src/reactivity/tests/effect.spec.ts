@@ -53,7 +53,7 @@ describe("effect", () => {
     obj.foo++
     expect(scheduler).toHaveBeenCalledTimes(1)
     expect(dummy).toBe(1)
-    run()
+    runner()
     expect(dummy).toBe(2)
   })
 

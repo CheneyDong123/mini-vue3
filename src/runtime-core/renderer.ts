@@ -358,7 +358,7 @@ export function createRenderer(options) {
         if (!instance.isMounted) {
           // init
           const { proxy } = instance;
-
+          // 调用instance上的render函数，取出subTree，也就是通过h函数生成好的vnode
           const subTree = (instance.subTree = instance.render.call(
             proxy,
             proxy

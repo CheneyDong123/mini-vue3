@@ -57,7 +57,10 @@ function setupStatefulComponent(instance: any) {
 }
 
 function handleSetupResult(instance, setupResult: any) {
+  // 当用户在setup里编写render函数
   //  TODO function
+
+  // 当用户在setup之外编写render函数
   if (typeof setupResult === "object") {
     instance.setupState = proxyRefs(setupResult);
   }
@@ -67,11 +70,13 @@ function handleSetupResult(instance, setupResult: any) {
 
 function finishCompomentSetup(instance: any) {
   const Component = instance.type;
-  if(compiler && !Component.render){
-    if(Component.template){
-      Component.render = compiler(Component.template)
+  // 编译模块--编译template模块成render函数
+  if (compiler && !Component.render) {
+    if (Component.template) {
+      Component.render = compiler(Component.template);
     }
-  } 
+  }
+  // 如果用户有render，则直接将render函数赋值给组件实例对象
   instance.render = Component.render;
 }
 
@@ -88,5 +93,5 @@ function setCurrentInstance(instance: any) {
 let compiler;
 
 export function registerRuntimeComplier(_compiler) {
- compiler = _compiler
+  compiler = _compiler;
 }
