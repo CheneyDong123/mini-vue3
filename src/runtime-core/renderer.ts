@@ -258,7 +258,6 @@ export function createRenderer(options) {
         }
       }
       if (oldProps !== EMPTY_OBJECT) {
-        // 未运行，？？？？
         for (const key in oldProps) {
           // console.log(1);
           // console.log(newProps);

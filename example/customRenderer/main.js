@@ -30,4 +30,6 @@ const renderer = createRenderer({
   },
 });
 
+console.log("renderer", renderer);
+
 renderer.createApp(App).mount(game.stage);

@@ -48,6 +48,9 @@ const renderer: any = createRenderer({
   setElementText,
 });
 
+console.log("renderer", renderer);
+
+
 export function createApp(...args) {
   return renderer.createApp(...args);
 }

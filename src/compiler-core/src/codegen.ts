@@ -59,6 +59,7 @@ function genNode(node: any, context): void {
 
     case NodeTypes.COMPOUND_EXPRESSION:
       genCompoundExpression(node, context);
+      break;
     default:
       break;
   }
