@@ -1,5 +1,3 @@
-export * from "./toDisplayString";
-
 export const extend = Object.assign;
 
 export const EMPTY_OBJECT = {};
@@ -37,3 +35,4 @@ export const toHandlerKey = (str: string) => {
 };
 
 export { ShapeFlags } from "./ShapeFlags";
+export { toDisplayString } from "./toDisplayString";
